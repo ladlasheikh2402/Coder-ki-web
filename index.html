@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Choto Don 😎 | Happy Birthday 🎂</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to top left, #00ffff, #e0ffff);
+      font-family: 'Poppins', sans-serif;
+      color: gold;
+      overflow: hidden;
+      text-align: center;
+      transition: background 1.5s ease;
+    }
+    body.black-theme {
+      background: linear-gradient(to bottom right, #000, #111);
+    }
+    header, footer, .date-bar, h1, p, #message {
+      backdrop-filter: blur(10px);
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 15px;
+      margin: 10px auto;
+      max-width: 90%;
+      padding: 10px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+    header, footer {
+      font-size: 1.3em;
+      font-weight: bold;
+      font-family: 'Great Vibes', cursive;
+      letter-spacing: 1px;
+    }
+    .date-bar {
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+    h1 {
+      font-size: 3.2em;
+      font-family: 'Great Vibes', cursive;
+      text-shadow: 2px 2px 6px #cc0066;
+    }
+    p, #message {
+      font-size: 1.3em;
+      font-weight: bold;
+      font-style: italic;
+    }
+    button {
+      margin-top: 25px;
+      padding: 14px 30px;
+      font-size: 18px;
+      border: none;
+      border-radius: 30px;
+      background: #ff3385;
+      color: gold;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease, background 0.3s;
+    }
+    button:hover {
+      background: #e60073;
+      transform: scale(1.05);
+    }
+    #message {
+      display: none;
+      animation: fadeInBounce 2s forwards;
+    }
+    @keyframes fadeInBounce {
+      0% { opacity: 0; transform: translateY(50px) scale(0.8); }
+      60% { opacity: 1; transform: translateY(-10px) scale(1.05); }
+      100% { transform: translateY(0) scale(1); }
+    }
+    .heart {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background: #ff99cc;
+      transform: rotate(45deg);
+      animation: float 6s infinite ease-in;
+      opacity: 0.8;
+      box-shadow: 0 0 8px #ff99cc;
+    }
+    .heart::before, .heart::after {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background: #ff99cc;
+      border-radius: 50%;
+    }
+    .heart::before { top: -9px; left: 0; }
+    .heart::after { left: -9px; top: 0; }
+    @keyframes float {
+      0% { transform: translateY(0) rotate(45deg); opacity: 1; }
+      100% { transform: translateY(-100vh) rotate(45deg); opacity: 0; }
+    }
+    .gift-box {
+      display: none;
+      font-size: 4em;
+      margin-top: 30px;
+      animation: bounceIn 2s ease forwards;
+    }
+    @keyframes bounceIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      50% { transform: scale(1.2); opacity: 1; }
+      70% { transform: scale(0.9); }
+      100% { transform: scale(1); }
+    }
+    .emoji {
+      position: absolute;
+      font-size: 24px;
+      animation: drop 4s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes drop {
+      0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+    .new-button {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 14px 30px;
+      font-size: 18px;
+      border: none;
+      border-radius: 30px;
+      background: #ff3385;
+      color: gold;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      display: none;
+    }
+    .new-button:hover {
+      background: #e60073;
+      transform: scale(1.05);
+    }
+
+    /* POPUP STYLING */
+    .overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      display: none;
+    }
+    .popup {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #ff66b2;
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      color: #fff;
+      max-width: 90%;
+      width: 400px;
+      font-size: 1.2em;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+      position: relative;
+    }
+    .toggle-popup {
+      position: absolute;
+      top: 120px;
+      right: 1px;
+      background: #ff3385;
+      border: none;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 18px;
+      width: 35px;
+      height: 35px;
+      cursor: pointer;
+      box-shadow: 0 0 10px #ff66b2;
+    }
+  </style>
+</head>
+<body>
+  <header>💐 Happy Birthday Choto Don 💐</header>
+  <div class="date-bar">🎉 1 September – The Day You Are Born 💖</div>
+  <h1>Choto Don 💘 Paglu</h1>
+  <p>
+    Today The World Got Brighter,<br>
+    Because You Were Born, My Love. 🌹<br>
+    You are my heart, my joy, my everything.
+  </p>
+  <button onclick="showMessage()">Click for a Surprise 💌</button>
+  <div class="gift-box" id="giftBox">🎁</div>
+  <div id="message">
+     Choto Don, You Are The Poetry In My Soul,<br>
+    The Light In My Days, And The Dream Of My Nights.<br>
+    I Love You Jaan Endlessly. 💞 – Yours, Paglu
+  </div>
+  <audio id="bgMusic" preload="auto">
+    <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mp3" />
+  </audio>
+  <footer>With all my love – Paglu ❤️</footer>
+  <button class="new-button" id="newButton" onclick="togglePopup()">Surprise Me Again! 💌</button>
+
+  <!-- POPUP BOX -->
+  <div class="overlay" id="popupOverlay">
+    <div class="popup">
+      <button class="toggle-popup" onclick="togglePopup()">✖</button>
+      💌My love ❤️, today isn’t just your birthday—it’s the day my whole world became brighter because YOU exist ✨. Every moment with you feels like a beautiful dream I never want to wake up from 🌙💫. Your smile is my favorite sunrise 🌅, your touch my safest place 🤗, and your love is the greatest gift I could ever receive 🎁❤️. On this special day, I just want to hold you close 🤍, remind you how deeply I love you 💕, and promise to spend my entire life making you as happy as you make me 🥰. Happy Birthday, My Forever Choto Don 👑❤️!
+    </div>
+  </div>
+
+  <script>
+    function showMessage() {
+      document.body.classList.add("black-theme");
+      document.getElementById("message").style.display = "block";
+      document.getElementById("giftBox").style.display = "block";
+      document.querySelector("button").style.display = "none";
+      document.getElementById("newButton").style.display = "inline-block";
+
+      const music = document.getElementById("bgMusic");
+      music.play().catch(err => console.log("Autoplay blocked:", err));
+
+      for (let i = 0; i < 50; i++) {
+        const emoji = document.createElement('div');
+        emoji.classList.add('emoji');
+        emoji.style.left = Math.random() * 100 + 'vw';
+        emoji.style.animationDuration = (Math.random() * 2 + 3) + 's';
+        emoji.textContent = ['💖', '😘', '💘', '🥰', '🌹'][Math.floor(Math.random() * 5)];
+        document.body.appendChild(emoji);
+        setTimeout(() => emoji.remove(), 4000);
+      }
+    }
+
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.animationDuration = (Math.random() * 3 + 3) + "s";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 6000);
+    }
+
+    function togglePopup() {
+      const popup = document.getElementById("popupOverlay");
+      popup.style.display = (popup.style.display === "flex") ? "none" : "flex";
+    }
+
+    setInterval(createHeart, 250);
+  </script>
+</body>
+  </html>
