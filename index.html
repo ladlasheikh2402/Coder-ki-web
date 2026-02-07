@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multi-Platform Social Media Downloader</title>
+    <title>Website Copy Tool - Extract & Download Website Code</title>
     <style>
         * {
             margin: 0;
@@ -22,43 +22,56 @@
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: white;
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             padding: 40px;
             max-width: 600px;
             width: 100%;
             text-align: center;
-            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        .container:hover {
-            transform: translateY(-5px);
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
         }
 
-        .header {
-            margin-bottom: 30px;
-        }
-
-        .title {
+        .logo {
             font-size: 2.5rem;
-            font-weight: 700;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
             background: linear-gradient(135deg, #667eea, #764ba2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 10px;
         }
 
         .subtitle {
             color: #666;
+            margin-bottom: 40px;
             font-size: 1.1rem;
-            margin-bottom: 30px;
         }
 
-        .input-section {
+        .input-group {
             margin-bottom: 30px;
+            position: relative;
+        }
+
+        .input-label {
+            display: block;
+            text-align: left;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: 600;
+            font-size: 1rem;
         }
 
         .url-input {
@@ -68,397 +81,501 @@
             border-radius: 12px;
             font-size: 1rem;
             transition: all 0.3s ease;
-            background: #f8f9fa;
+            outline: none;
         }
 
         .url-input:focus {
-            outline: none;
             border-color: #667eea;
-            background: white;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
-        .platform-section {
-            margin-bottom: 30px;
-        }
-
-        .platform-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        .platform-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .platform-btn {
-            padding: 15px 10px;
-            border: 2px solid #e1e5e9;
-            border-radius: 12px;
-            background: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #555;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .platform-btn:hover {
-            border-color: #667eea;
-            background: #f8f9ff;
-            transform: translateY(-2px);
-        }
-
-        .platform-btn.active {
-            border-color: #667eea;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-        }
-
-        .platform-icon {
-            font-size: 1.5rem;
-        }
-
-        .download-btn {
+        .copy-btn {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border: none;
             padding: 15px 40px;
-            border-radius: 12px;
             font-size: 1.1rem;
             font-weight: 600;
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-bottom: 20px;
-            width: 100%;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .download-btn:hover {
+        .copy-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
         }
 
-        .download-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
+        .copy-btn:active {
+            transform: translateY(0);
         }
 
-        .result-section {
-            margin-top: 20px;
-            padding: 20px;
-            border-radius: 12px;
-            background: #f8f9fa;
+        .copy-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress-container {
+            margin: 30px 0;
             display: none;
         }
 
-        .result-section.show {
-            display: block;
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 15px;
         }
 
-        .result-section.success {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 4px;
         }
 
-        .result-section.error {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
-        }
-
-        .download-link {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 10px 20px;
-            background: #28a745;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: background 0.3s ease;
-        }
-
-        .download-link:hover {
-            background: #218838;
-        }
-
-        .footer {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #e1e5e9;
+        .progress-text {
             color: #666;
             font-size: 0.9rem;
         }
 
-        .footer a {
-            color: #667eea;
-            text-decoration: none;
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: none;
+            border: 1px solid #c3e6cb;
+        }
+
+        .download-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
             font-weight: 600;
-        }
-
-        .footer a:hover {
-            text-decoration: underline;
-        }
-
-        .loading {
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
             display: none;
             margin: 10px 0;
         }
 
-        .loading.show {
-            display: block;
+        .download-btn:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: none;
+            border: 1px solid #f5c6cb;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+
+        .powered-by {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .whatsapp-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .whatsapp-link {
+            background: #25d366;
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .whatsapp-link:hover {
+            background: #128c7e;
+            transform: translateY(-1px);
         }
 
         .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            to { transform: rotate(360deg); }
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 480px) {
             .container {
                 padding: 30px 20px;
-                margin: 10px;
             }
-
-            .title {
+            
+            .logo {
                 font-size: 2rem;
             }
-
-            .platform-grid {
-                grid-template-columns: repeat(2, 1fr);
+            
+            .whatsapp-links {
+                flex-direction: column;
+                align-items: center;
             }
+        }
+
+        .demo-note {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #ffeaa7;
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1 class="title">AK Multi Downloader</h1>
-            <p class="subtitle">Download videos and content from multiple social media platforms</p>
+        <div class="logo">🌐 Website Copy Tool</div>
+        <div class="subtitle">Extract and download all website code (HTML, CSS, JavaScript, API) in one click</div>
+        
+        <div class="demo-note">
+            <strong>📝 Demo Mode:</strong> This is a demonstration version with a mock backend. It simulates the website copying process without actually downloading files.
         </div>
-
-        <div class="input-section">
-            <input type="text" class="url-input" id="videoUrl" placeholder="Paste your video link here..." />
+        
+        <div class="input-group">
+            <label class="input-label">ENTER YOUR WEBSITE LINK</label>
+            <input type="url" class="url-input" id="websiteUrl" placeholder="https://example.com" required>
         </div>
-
-        <div class="platform-section">
-            <h3 class="platform-title">Select Social Media Platform</h3>
-            <div class="platform-grid">
-                <div class="platform-btn" data-platform="facebook">
-                    <div class="platform-icon">📘</div>
-                    <div>Facebook</div>
-                </div>
-                <div class="platform-btn" data-platform="tiktok">
-                    <div class="platform-icon">🎵</div>
-                    <div>TikTok</div>
-                </div>
-                <div class="platform-btn" data-platform="instagram">
-                    <div class="platform-icon">📷</div>
-                    <div>Instagram</div>
-                </div>
-                <div class="platform-btn" data-platform="pinterest">
-                    <div class="platform-icon">📌</div>
-                    <div>Pinterest</div>
-                </div>
-                <div class="platform-btn" data-platform="spotify">
-                    <div class="platform-icon">🎧</div>
-                    <div>Spotify</div>
-                </div>
-                <div class="platform-btn" data-platform="telegram">
-                    <div class="platform-icon">✈️</div>
-                    <div>Telegram Story</div>
-                </div>
-                <div class="platform-btn" data-platform="twitter">
-                    <div class="platform-icon">🐦</div>
-                    <div>Twitter</div>
-                </div>
+        
+        <button class="copy-btn" id="startCopyBtn" onclick="startCopy()">
+            START COPY
+        </button>
+        
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
             </div>
+            <div class="progress-text" id="progressText">Analyzing website...</div>
         </div>
-
-        <button class="download-btn" id="downloadBtn" disabled>Download Content</button>
-
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p>Processing your request...</p>
+        
+        <div class="success-message" id="successMessage">
+            <strong>ALL CODE COPIED ✅</strong><br>
+            Your website code has been successfully extracted and packaged.
         </div>
-
-        <div class="result-section" id="resultSection">
-            <div id="resultMessage"></div>
-        </div>
-
+        
+        <div class="error-message" id="errorMessage"></div>
+        
+        <button class="download-btn" id="downloadBtn" onclick="downloadZip()">
+            📥 DOWNLOAD ZIP FILE
+        </button>
+        
         <div class="footer">
-            <p><strong>POWERED BY OLD-STUDIO</strong></p>
-            <p>Follow on WhatsApp: <a href="https://whatsapp.com/channel/0029VavHzv259PwTIz1XxJ09" target="_blank">Join Channel</a></p>
+            <div class="powered-by">POWERED BY OLD-STUDIO</div>
+            <div class="whatsapp-links">
+                <a href="https://whatsapp.com/channel/0029VbAtNf6Likg7MJqCkp2d" class="whatsapp-link" target="_blank">
+                    📱 FOLLOW ON WHATSAPP
+                </a>
+            </div>
         </div>
     </div>
 
     <script>
-        // API endpoints for different platforms
-        const API_ENDPOINTS = {
-            facebook: 'https://fb-down.apis-bj-devs.workers.dev/',
-            instagram: 'https://insta-down.apis-bj-devs.workers.dev/',
-            tiktok: 'https://tiktok-down.apis-bj-devs.workers.dev/',
-            pinterest: 'https://pinterest-down.apis-bj-devs.workers.dev/',
-            twitter: 'https://twitter-down.apis-bj-devs.workers.dev/',
-            spotify: 'https://spotify-down.apis-bj-devs.workers.dev/',
-            telegram: 'https://tgstory-down.apis-bj-devs.workers.dev/'
-        };
+        let currentJobId = null;
 
-        let selectedPlatform = null;
+        // Mock backend simulation
+        class MockBackend {
+            constructor() {
+                this.jobs = new Map();
+            }
 
-        // DOM elements
-        const platformBtns = document.querySelectorAll('.platform-btn');
-        const downloadBtn = document.getElementById('downloadBtn');
-        const urlInput = document.getElementById('videoUrl');
-        const loading = document.getElementById('loading');
-        const resultSection = document.getElementById('resultSection');
-        const resultMessage = document.getElementById('resultMessage');
+            async copyWebsite(url) {
+                // Validate URL
+                if (!this.isValidUrl(url)) {
+                    return { success: false, error: 'Invalid URL format' };
+                }
 
-        // Platform selection
-        platformBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                // Remove active class from all buttons
-                platformBtns.forEach(b => b.classList.remove('active'));
+                // Generate job ID
+                const jobId = this.generateJobId();
                 
-                // Add active class to clicked button
-                btn.classList.add('active');
-                
-                // Set selected platform
-                selectedPlatform = btn.dataset.platform;
-                
-                // Enable download button if URL is provided
-                updateDownloadButton();
-            });
-        });
+                // Initialize job
+                this.jobs.set(jobId, {
+                    url: url,
+                    progress: 0,
+                    status: 'Starting...',
+                    completed: false,
+                    success: false,
+                    error: null,
+                    startTime: Date.now()
+                });
 
-        // URL input validation
-        urlInput.addEventListener('input', updateDownloadButton);
+                // Start mock processing
+                this.simulateProcessing(jobId);
 
-        function updateDownloadButton() {
-            const hasUrl = urlInput.value.trim().length > 0;
-            const hasPlatform = selectedPlatform !== null;
-            
-            downloadBtn.disabled = !(hasUrl && hasPlatform);
+                return { success: true, jobId: jobId };
+            }
+
+            async getProgress(jobId) {
+                const job = this.jobs.get(jobId);
+                if (!job) {
+                    return { error: 'Job not found' };
+                }
+
+                return {
+                    progress: job.progress,
+                    status: job.status,
+                    completed: job.completed,
+                    success: job.success,
+                    error: job.error
+                };
+            }
+
+            async downloadZip(jobId) {
+                const job = this.jobs.get(jobId);
+                if (!job || !job.completed || !job.success) {
+                    throw new Error('Job not completed or failed');
+                }
+
+                // Create a mock zip file content
+                const mockZipContent = this.createMockZipContent(job.url);
+                const blob = new Blob([mockZipContent], { type: 'application/zip' });
+                return blob;
+            }
+
+            simulateProcessing(jobId) {
+                const job = this.jobs.get(jobId);
+                if (!job) return;
+
+                const steps = [
+                    { progress: 10, status: 'Connecting to website...', delay: 500 },
+                    { progress: 25, status: 'Analyzing HTML structure...', delay: 800 },
+                    { progress: 40, status: 'Downloading CSS files...', delay: 1000 },
+                    { progress: 60, status: 'Extracting JavaScript files...', delay: 1200 },
+                    { progress: 75, status: 'Collecting images and assets...', delay: 900 },
+                    { progress: 90, status: 'Packaging files...', delay: 600 },
+                    { progress: 100, status: 'Complete!', delay: 300 }
+                ];
+
+                let stepIndex = 0;
+
+                const processStep = () => {
+                    if (stepIndex >= steps.length) {
+                        job.completed = true;
+                        job.success = true;
+                        job.status = 'Website successfully copied!';
+                        return;
+                    }
+
+                    const step = steps[stepIndex];
+                    job.progress = step.progress;
+                    job.status = step.status;
+
+                    stepIndex++;
+                    setTimeout(processStep, step.delay);
+                };
+
+                processStep();
+            }
+
+            isValidUrl(string) {
+                try {
+                    new URL(string);
+                    return true;
+                } catch (_) {
+                    return false;
+                }
+            }
+
+            generateJobId() {
+                return 'job_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+            }
+
+            createMockZipContent(url) {
+                const domain = new URL(url).hostname;
+                return `Mock ZIP file content for ${domain}\n\nThis would contain:\n- index.html\n- styles.css\n- script.js\n- images/\n- assets/\n\nGenerated at: ${new Date().toISOString()}`;
+            }
         }
 
-        // Download functionality
-        downloadBtn.addEventListener('click', async () => {
+        // Initialize mock backend
+        const mockBackend = new MockBackend();
+
+        async function startCopy() {
+            const urlInput = document.getElementById('websiteUrl');
             const url = urlInput.value.trim();
             
-            if (!url || !selectedPlatform) {
-                showResult('Please enter a URL and select a platform.', 'error');
+            if (!url) {
+                showError('Please enter a valid website URL');
                 return;
             }
-
-            // Show loading
-            loading.classList.add('show');
-            resultSection.classList.remove('show');
-            downloadBtn.disabled = true;
-
+            
+            if (!isValidUrl(url)) {
+                showError('Please enter a valid URL (e.g., https://example.com)');
+                return;
+            }
+            
+            // Reset UI
+            hideMessages();
+            showProgress();
+            disableButton();
+            
             try {
-                const apiUrl = `${API_ENDPOINTS[selectedPlatform]}?url=${encodeURIComponent(url)}`;
+                const result = await mockBackend.copyWebsite(url);
                 
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-
-                if (response.ok && data.success !== false) {
-                    // Handle successful response
-                    let message = `✅ Content processed successfully!`;
-                    
-                    if (data.download_url || data.url || data.downloadUrl) {
-                        const downloadUrl = data.download_url || data.url || data.downloadUrl;
-                        message += `<br><a href="${downloadUrl}" class="download-link" target="_blank" download>Download File</a>`;
-                    } else if (data.video_url || data.audio_url) {
-                        message += `<br>`;
-                        if (data.video_url) {
-                            message += `<a href="${data.video_url}" class="download-link" target="_blank" download>Download Video</a> `;
-                        }
-                        if (data.audio_url) {
-                            message += `<a href="${data.audio_url}" class="download-link" target="_blank" download>Download Audio</a>`;
-                        }
-                    } else {
-                        message += `<br><pre>${JSON.stringify(data, null, 2)}</pre>`;
-                    }
-                    
-                    showResult(message, 'success');
+                if (result.success) {
+                    currentJobId = result.jobId;
+                    pollProgress();
                 } else {
-                    // Handle API error
-                    const errorMsg = data.message || data.error || 'Failed to process the URL. Please check the URL and try again.';
-                    showResult(`❌ ${errorMsg}`, 'error');
+                    showError(result.error || 'Failed to start copying process');
+                    enableButton();
+                    hideProgress();
                 }
             } catch (error) {
-                console.error('Download error:', error);
-                showResult(`❌ Network error: ${error.message}. Please check your internet connection and try again.`, 'error');
-            } finally {
-                // Hide loading
-                loading.classList.remove('show');
-                downloadBtn.disabled = false;
-                updateDownloadButton();
+                showError('Error: ' + error.message);
+                enableButton();
+                hideProgress();
             }
-        });
-
-        function showResult(message, type) {
-            resultMessage.innerHTML = message;
-            resultSection.className = `result-section show ${type}`;
         }
-
-        // Auto-detect platform from URL
-        urlInput.addEventListener('input', () => {
-            const url = urlInput.value.trim().toLowerCase();
+        
+        async function pollProgress() {
+            if (!currentJobId) return;
             
-            if (url.includes('facebook.com') || url.includes('fb.com')) {
-                selectPlatform('facebook');
-            } else if (url.includes('instagram.com')) {
-                selectPlatform('instagram');
-            } else if (url.includes('tiktok.com')) {
-                selectPlatform('tiktok');
-            } else if (url.includes('pinterest.com')) {
-                selectPlatform('pinterest');
-            } else if (url.includes('twitter.com') || url.includes('x.com')) {
-                selectPlatform('twitter');
-            } else if (url.includes('spotify.com')) {
-                selectPlatform('spotify');
-            } else if (url.includes('t.me')) {
-                selectPlatform('telegram');
-            }
-        });
-
-        function selectPlatform(platform) {
-            platformBtns.forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.dataset.platform === platform) {
-                    btn.classList.add('active');
-                    selectedPlatform = platform;
+            try {
+                const data = await mockBackend.getProgress(currentJobId);
+                
+                if (data.error) {
+                    showError(data.error);
+                    enableButton();
+                    hideProgress();
+                    return;
                 }
-            });
-            updateDownloadButton();
+                
+                updateProgress(data.progress, data.status);
+                
+                if (data.completed) {
+                    if (data.success) {
+                        showSuccess();
+                        showDownloadButton();
+                    } else {
+                        showError(data.error || 'Failed to copy website');
+                    }
+                    enableButton();
+                    hideProgress();
+                } else {
+                    setTimeout(pollProgress, 1000);
+                }
+            } catch (error) {
+                showError('Error checking progress: ' + error.message);
+                enableButton();
+                hideProgress();
+            }
         }
-
+        
+        async function downloadZip() {
+            if (!currentJobId) return;
+            
+            try {
+                const blob = await mockBackend.downloadZip(currentJobId);
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'website-copy-demo.txt';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            } catch (error) {
+                showError('Download error: ' + error.message);
+            }
+        }
+        
+        function isValidUrl(string) {
+            try {
+                new URL(string);
+                return true;
+            } catch (_) {
+                return false;
+            }
+        }
+        
+        function showProgress() {
+            document.getElementById('progressContainer').style.display = 'block';
+        }
+        
+        function hideProgress() {
+            document.getElementById('progressContainer').style.display = 'none';
+        }
+        
+        function updateProgress(percentage, status) {
+            document.getElementById('progressFill').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = status;
+        }
+        
+        function showSuccess() {
+            document.getElementById('successMessage').style.display = 'block';
+        }
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+        
+        function hideMessages() {
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('downloadBtn').style.display = 'none';
+        }
+        
+        function showDownloadButton() {
+            document.getElementById('downloadBtn').style.display = 'inline-block';
+        }
+        
+        function disableButton() {
+            const btn = document.getElementById('startCopyBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span>COPYING...';
+        }
+        
+        function enableButton() {
+            const btn = document.getElementById('startCopyBtn');
+            btn.disabled = false;
+            btn.innerHTML = 'START COPY';
+        }
+        
         // Enter key support
-        urlInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !downloadBtn.disabled) {
-                downloadBtn.click();
+        document.getElementById('websiteUrl').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                startCopy();
             }
         });
     </script>
